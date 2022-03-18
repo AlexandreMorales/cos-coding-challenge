@@ -1,4 +1,5 @@
 export const DependencyIdentifier = {
     LOGGER: "logger",
-    CLIENT: "client",
+    COS_CLIENT: "cos_client",
+    COS_CONFIG: "cos_config",
 };
