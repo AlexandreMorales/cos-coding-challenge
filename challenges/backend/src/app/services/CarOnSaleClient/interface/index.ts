@@ -1,1 +1,1 @@
-export { ICarOnSaleClient } from './ICarOnSaleClient'
+export * from "./ICarOnSaleClient";
