@@ -6,6 +6,7 @@ import { ICarOnSaleClient } from "../interface";
 import { ICosConfig, ICosAuthenticationResponse, ICosAuthenticationHeader, ICosAuction, ICosPage } from "../dtos";
 import { ILogger } from "../../Logger/interface/ILogger";
 import { DependencyIdentifier } from "../../../DependencyIdentifiers";
+import { IApiConfig } from "../../../dtos";
 
 @injectable()
 export class CarOnSaleClient implements ICarOnSaleClient {
@@ -13,19 +14,19 @@ export class CarOnSaleClient implements ICarOnSaleClient {
 
   public constructor(
     @inject(DependencyIdentifier.COS_CONFIG) private readonly config: ICosConfig,
-    @inject(DependencyIdentifier.LOGGER) private readonly logger: ILogger
+    @inject(DependencyIdentifier.LOGGER) private readonly logger: ILogger,
+    @inject(DependencyIdentifier.HTTP_CLIENT) httpClientFactory: (config: IApiConfig) => AxiosInstance,
   ) {
-    this.httpClient = axios.create({
-      baseURL: config.baseURL
-    })
+    this.httpClient = httpClientFactory(config)
   }
 
   public logError(requestName: string, e: any) {
     if (axios.isAxiosError(e)) {
       const { response } = e as AxiosError;
-      this.logger.error(`${requestName} returned status ${response?.status} with message '${response?.data.message}'.`);
+      this.logger.error(`${requestName} returned status ${response?.status} with message '${response?.data?.message}'.`);
     } else {
-      this.logger.error(`${requestName} failed.`);
+      const { message } = e as Error;
+      this.logger.error(`${requestName} failed with message '${message}'.`);
     }
   }
 

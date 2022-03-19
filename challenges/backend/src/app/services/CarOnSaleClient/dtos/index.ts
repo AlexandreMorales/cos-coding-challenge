@@ -1,5 +1,6 @@
-export interface ICosConfig {
-  baseURL: string | undefined
+import { IApiConfig } from '../../../dtos'
+
+export interface ICosConfig extends IApiConfig {
   userEmail: string | undefined
   password: string | undefined
 }

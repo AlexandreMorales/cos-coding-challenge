@@ -1,6 +1,7 @@
 import { config } from "dotenv";
-// import path from "path";
 import { Container } from "inversify";
+import axios, { AxiosInstance } from "axios";
+import { IApiConfig } from "./dtos";
 import { ILogger } from "./services/Logger/interface/ILogger";
 import { Logger } from "./services/Logger/classes/Logger";
 import { ICarOnSaleClient } from "./services/CarOnSaleClient/interface";
@@ -27,6 +28,9 @@ container.bind<ICosConfig>(DependencyIdentifier.COS_CONFIG).toConstantValue({
     password: process.env.CARONSALE_PASSWORD,
 });
 
+container.bind<AxiosInstance>(DependencyIdentifier.HTTP_CLIENT).toFactory(_ => (apiConfig: IApiConfig) => axios.create({
+    baseURL: apiConfig.baseURL
+}));
 container.bind<ILogger>(DependencyIdentifier.LOGGER).to(Logger);
 container.bind<ICarOnSaleClient>(DependencyIdentifier.COS_CLIENT).to(CarOnSaleClient);
 
