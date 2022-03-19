@@ -7,6 +7,7 @@ import { ICosConfig, ICosAuthenticationResponse, ICosAuthenticationHeader, ICosA
 import { ILogger } from "../../Logger/interface/ILogger";
 import { DependencyIdentifier } from "../../../DependencyIdentifiers";
 import { IApiConfig } from "../../../dtos";
+import { encapsulateLoader } from "../../../helpers";
 
 @injectable()
 export class CarOnSaleClient implements ICarOnSaleClient {
@@ -20,7 +21,7 @@ export class CarOnSaleClient implements ICarOnSaleClient {
     this.httpClient = httpClientFactory(config)
   }
 
-  public logError(requestName: string, e: any) {
+  public logError(requestName: string, e: any): void {
     if (axios.isAxiosError(e)) {
       const { response } = e as AxiosError;
       this.logger.error(`${requestName} returned status ${response?.status} with message '${response?.data?.message}'.`);
@@ -30,28 +31,12 @@ export class CarOnSaleClient implements ICarOnSaleClient {
     }
   }
 
-  private async encapsulateLoader(callback: () => Promise<void>) {
-    const loader = ["\\", "|", "/", "-"];
-    let i = 0;
-    const interval = setInterval(() => {
-      process.stdout.write("\r" + loader[i]);
-      i = (i + 1) % loader.length;
-    }, 250);
-
-    try {
-      await callback()
-    } finally {
-      clearInterval(interval)
-      process.stdout.write("\r");
-    }
-  }
-
   public async getAuthenticationHeader(): Promise<ICosAuthenticationHeader> {
     try {
-      this.logger.log(`Getting authentication for user '${this.config.userEmail}'.`);
+      this.logger.log(`Getting COS authentication for user '${this.config.userEmail}'.`);
       let response: AxiosResponse | undefined;
 
-      await this.encapsulateLoader(async () => {
+      await encapsulateLoader(async () => {
         response = await this.httpClient.put(`/api/v1/authentication/${this.config.userEmail}`,
           {
             "password": this.config.password,
@@ -67,7 +52,7 @@ export class CarOnSaleClient implements ICarOnSaleClient {
       };
     } catch (e) {
       this.logError('COS Authentication', e);
-      process.exit(-1);
+      throw e;
     }
   }
 
@@ -75,10 +60,10 @@ export class CarOnSaleClient implements ICarOnSaleClient {
     try {
       const authConfig = await this.getAuthenticationHeader();
 
-      this.logger.log(`Retriving auctions.`);
+      this.logger.log(`Retriving COS auctions.`);
       let response: AxiosResponse | undefined;
 
-      await this.encapsulateLoader(async () => {
+      await encapsulateLoader(async () => {
         response = await this.httpClient.get(`/api/v2/auction/buyer/`,
           {
             headers: { ...authConfig },
@@ -91,8 +76,8 @@ export class CarOnSaleClient implements ICarOnSaleClient {
 
       return response?.data as ICosPage<ICosAuction>;
     } catch (e) {
-      this.logError('COS Get Auctions', e)
-      process.exit(-1);
+      this.logError('COS Get Auctions', e);
+      throw e;
     }
   }
 }
