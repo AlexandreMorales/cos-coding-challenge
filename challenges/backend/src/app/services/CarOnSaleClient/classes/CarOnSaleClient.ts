@@ -57,9 +57,9 @@ export class CarOnSaleClient implements ICarOnSaleClient {
   }
 
   public async getRunningAuctions(): Promise<ICosPage<ICosAuction>> {
-    try {
-      const authConfig = await this.getAuthenticationHeader();
+    const authConfig = await this.getAuthenticationHeader();
 
+    try {
       this.logger.log(`Retriving COS auctions.`);
       let response: AxiosResponse | undefined;
 
