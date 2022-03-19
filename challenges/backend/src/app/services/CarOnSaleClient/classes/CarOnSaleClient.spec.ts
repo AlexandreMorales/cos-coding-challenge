@@ -11,8 +11,8 @@ describe("CarOnSaleClient Tests", () => {
   let sandbox: SinonSandbox;
   let axiosInstance: AxiosInstance;
   let logger: ILogger;
-  let carOnSaleClient: CarOnSaleClient;
   let cosConfig: ICosConfig;
+  let carOnSaleClient: CarOnSaleClient;
 
   beforeEach(() => {
     sandbox = createSandbox();
@@ -280,9 +280,8 @@ describe("CarOnSaleClient Tests", () => {
           "meta": null,
         })).to.equal(true);
       expect(axiosInstanceGetStub.notCalled).to.equal(true);
-      expect(loggerErrorStub.calledTwice).to.equal(true);
+      expect(loggerErrorStub.calledOnce).to.equal(true);
       expect(loggerErrorStub.calledWithExactly(`COS Authentication returned status ${stubError.response?.status} with message '${stubError.response?.data.message}'.`)).to.equal(true);
-      expect(loggerErrorStub.calledWithExactly(`COS Get Auctions returned status ${stubError.response?.status} with message '${stubError.response?.data.message}'.`)).to.equal(true);
     });
   });
 });

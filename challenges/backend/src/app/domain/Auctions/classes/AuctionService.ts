@@ -16,11 +16,11 @@ export class AuctionService implements IAuctionService {
   ) {
   }
 
-  public getAuctiosBidSum(auctions: ICosAuction[]): number {
+  public getAuctionsBidSum(auctions: ICosAuction[]): number {
     return auctions?.reduce((acc, auction) => auction?.numBids ? acc + auction.numBids : acc, 0)
   }
 
-  public getAuctiosProgressSum(auctions: ICosAuction[]): number {
+  public getAuctionsProgressSum(auctions: ICosAuction[]): number {
     return auctions?.reduce((acc, auction) =>
       auction?.currentHighestBidValue ?
         acc + (auction.currentHighestBidValue / (auction.minimumRequiredAsk || 1)) :
@@ -36,9 +36,9 @@ export class AuctionService implements IAuctionService {
 
       this.logger.log(`Calculating statistics for ${totalAuctions} auctions.`);
 
-      const auctionsBidSum = this.getAuctiosBidSum(runningAuctions.items)
+      const auctionsBidSum = this.getAuctionsBidSum(runningAuctions.items)
       const auctionsBidAverage = auctionsBidSum / totalAuctions
-      const auctionsProgressSum = this.getAuctiosProgressSum(runningAuctions.items)
+      const auctionsProgressSum = this.getAuctionsProgressSum(runningAuctions.items)
       const auctionsProgressAverage = auctionsProgressSum / totalAuctions
 
       return {
