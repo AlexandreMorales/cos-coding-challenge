@@ -12,9 +12,9 @@ const FAKE_AUCTIONS = [
   { numBids: 0, currentHighestBidValue: 10, minimumRequiredAsk: 200 },
   { numBids: 3, currentHighestBidValue: 50, minimumRequiredAsk: 1000 },
   { numBids: 5, currentHighestBidValue: 1, minimumRequiredAsk: 10 },
-] as ICosAuction[]
-const FAKE_AUCTIONS_BID_SUM = 9
-const FAKE_AUCTIONS_PROGRESS_SUM = 40
+] as ICosAuction[];
+const FAKE_AUCTIONS_BID_SUM = 9;
+const FAKE_AUCTIONS_PROGRESS_SUM = 40;
 
 describe("AuctionService Tests", () => {
   let sandbox: SinonSandbox;
@@ -33,7 +33,7 @@ describe("AuctionService Tests", () => {
   describe("getAuctionsBidSum", () => {
     it("should return actions bid sum", async () => {
       // Act
-      const result = auctionService.getAuctionsBidSum(FAKE_AUCTIONS)
+      const result = auctionService.getAuctionsBidSum(FAKE_AUCTIONS);
 
       // Assert
       expect(result).to.equal(FAKE_AUCTIONS_BID_SUM);
@@ -43,7 +43,7 @@ describe("AuctionService Tests", () => {
   describe("getAuctionsProgressSum", () => {
     it("should return actions progress sum", async () => {
       // Act
-      const result = auctionService.getAuctionsProgressSum(FAKE_AUCTIONS)
+      const result = auctionService.getAuctionsProgressSum(FAKE_AUCTIONS);
 
       // Assert
       expect(result).to.equal(FAKE_AUCTIONS_PROGRESS_SUM);
@@ -59,35 +59,35 @@ describe("AuctionService Tests", () => {
         total: faker.datatype.number(),
       };
       const loggerLogStub = sandbox.stub();
-      logger.log = loggerLogStub
+      logger.log = loggerLogStub;
       const carOnSaleClientGetRunningAuctionsStub = sandbox.stub().returns(stubRunningAuctions);
-      carOnSaleClient.getRunningAuctions = carOnSaleClientGetRunningAuctionsStub
+      carOnSaleClient.getRunningAuctions = carOnSaleClientGetRunningAuctionsStub;
 
       // Act
-      const result = await auctionService.getAuctionsStatistics()
+      const result = await auctionService.getAuctionsStatistics();
 
       // Assert
       expect(loggerLogStub.calledOnce).to.equal(true);
       expect(carOnSaleClientGetRunningAuctionsStub.calledOnce).to.equal(true);
       expect(carOnSaleClientGetRunningAuctionsStub.calledOnceWithExactly()).to.equal(true);
-      expect(result.totalAuctions).to.equal(stubRunningAuctions.total)
-      expect(result.auctionsBidSum).to.equal(FAKE_AUCTIONS_BID_SUM)
-      expect(result.auctionsBidAverage).to.equal(FAKE_AUCTIONS_BID_SUM / stubRunningAuctions.total)
-      expect(result.auctionsProgressSum).to.equal(FAKE_AUCTIONS_PROGRESS_SUM)
-      expect(result.auctionsProgressAverage).to.equal(FAKE_AUCTIONS_PROGRESS_SUM / stubRunningAuctions.total)
+      expect(result.totalAuctions).to.equal(stubRunningAuctions.total);
+      expect(result.auctionsBidSum).to.equal(FAKE_AUCTIONS_BID_SUM);
+      expect(result.auctionsBidAverage).to.equal(FAKE_AUCTIONS_BID_SUM / stubRunningAuctions.total);
+      expect(result.auctionsProgressSum).to.equal(FAKE_AUCTIONS_PROGRESS_SUM);
+      expect(result.auctionsProgressAverage).to.equal(FAKE_AUCTIONS_PROGRESS_SUM / stubRunningAuctions.total);
     });
 
     it("should log error when calculation failed", async () => {
       // Arrange
       const stubRunningAuctions = undefined;
       const loggerErrorStub = sandbox.stub();
-      logger.error = loggerErrorStub
+      logger.error = loggerErrorStub;
       const carOnSaleClientGetRunningAuctionsStub = sandbox.stub().returns(stubRunningAuctions);
-      carOnSaleClient.getRunningAuctions = carOnSaleClientGetRunningAuctionsStub
+      carOnSaleClient.getRunningAuctions = carOnSaleClientGetRunningAuctionsStub;
 
       // Act
       try {
-        await auctionService.getAuctionsStatistics()
+        await auctionService.getAuctionsStatistics();
       } catch (e) {
         const { message } = e as Error;
         expect(message).to.equal("Cannot read properties of undefined (reading 'total')");

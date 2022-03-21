@@ -1,4 +1,4 @@
-import { IAuctionsStatistics } from '../../../domain/Auctions/dtos'
+import { IAuctionsStatistics } from "../../../domain/Auctions/dtos";
 
 /**
  * This service describes an interface to show the data for monitor app.

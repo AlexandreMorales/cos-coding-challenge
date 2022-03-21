@@ -1,4 +1,4 @@
-import { IAuctionsStatistics } from '../dtos'
+import { IAuctionsStatistics } from "../dtos";
 
 /**
  * This service describes an interface to compute auctions data.

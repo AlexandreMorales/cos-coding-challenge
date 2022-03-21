@@ -1,4 +1,4 @@
-import { IApiConfig } from '../../../dtos'
+import { IApiConfig } from "../../../dtos";
 
 export interface ICosConfig extends IApiConfig {
   userEmail: string | undefined

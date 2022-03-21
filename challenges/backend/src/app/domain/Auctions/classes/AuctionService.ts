@@ -17,7 +17,7 @@ export class AuctionService implements IAuctionService {
   }
 
   public getAuctionsBidSum(auctions: ICosAuction[]): number {
-    return auctions?.reduce((acc, auction) => auction?.numBids ? acc + auction.numBids : acc, 0)
+    return auctions?.reduce((acc, auction) => auction?.numBids ? acc + auction.numBids : acc, 0);
   }
 
   public getAuctionsProgressSum(auctions: ICosAuction[]): number {
@@ -25,21 +25,21 @@ export class AuctionService implements IAuctionService {
       auction?.currentHighestBidValue ?
         acc + (auction.currentHighestBidValue / (auction.minimumRequiredAsk || 1)) :
         acc
-      , 0) * 100
+      , 0) * 100;
   }
 
   public async getAuctionsStatistics(): Promise<IAuctionsStatistics> {
     const runningAuctions = await this.cosClient.getRunningAuctions();
 
     try {
-      const totalAuctions = runningAuctions.total
+      const totalAuctions = runningAuctions.total;
 
       this.logger.log(`Calculating statistics for ${totalAuctions} auctions.`);
 
-      const auctionsBidSum = this.getAuctionsBidSum(runningAuctions.items)
-      const auctionsBidAverage = auctionsBidSum / totalAuctions
-      const auctionsProgressSum = this.getAuctionsProgressSum(runningAuctions.items)
-      const auctionsProgressAverage = auctionsProgressSum / totalAuctions
+      const auctionsBidSum = this.getAuctionsBidSum(runningAuctions.items);
+      const auctionsBidAverage = auctionsBidSum / totalAuctions;
+      const auctionsProgressSum = this.getAuctionsProgressSum(runningAuctions.items);
+      const auctionsProgressAverage = auctionsProgressSum / totalAuctions;
 
       return {
         totalAuctions,
